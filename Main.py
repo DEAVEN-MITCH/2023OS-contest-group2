@@ -10,28 +10,32 @@ class Page:
         self.addr =0
 class PageManager:
     def __init__(self,config:dict):
-        self.frameNumber = config['frameNumber']
+        self.frameNumbers = config['frameNumbers']
         self.testPolicies = config['testPolicies']
         self.policyParameters = config['policyParameters']
         self.commonPolicyParameters=config['commonPolicyParameters']
         self.outputFile = open(config['outputFile'],'wt')
         self.traceFile = config['traceFile']
         # self.pages=(page() for i in range(frameNumber))
-    def MakeNewpages(self):
-        self.pages=tuple([Page() for i in range(self.frameNumber)])#tuple
+    def MakeNewpages(self,frameNumber):
+        self.pages=tuple([Page() for i in range(frameNumber)])#tuple
     def Run(self):
-        for policyName in self.testPolicies:
-            self.currentPolicy = policyName
-            parameter = self.policyParameters[policyName]
-            for traceFile in self.traceFile:
-                logging.debug(f"new start policy:{policyName};traceFile:{traceFile};parameter:{parameter}")
-                self.MakeNewpages()
-                # logging.debug(policyName)
+        for traceFile in self.traceFile:
+            self.outputFile.write(f'============================\n')
+            self.outputFile.write(f'traceFile:{traceFile}\n')
+            for policyName in self.testPolicies:
+                self.currentPolicy = policyName
+                parameter = self.policyParameters[policyName]
                 policyModule =  importlib.import_module(policyName)
                 policyClass = getattr(policyModule,policyName)
-                policy=policyClass(*self.MakePolicyParameter(parameter))#为每个traceFile实例化一个policy对象
-                self.ProcessEachPolicy(policy,traceFile)
-                logging.debug(f'end policy:{policyName};traceFile:{traceFile};parameter:{parameter}')
+                self.WriteToOutputFile(policyClass.GetHeader())
+                for frameNumber in self.frameNumbers:
+                    logging.debug(f"new start policy:{policyName};traceFile:{traceFile};parameter:{parameter}frameNumber{frameNumber}")
+                    self.MakeNewpages(frameNumber)
+                    # logging.debug(policyName)
+                    policy=policyClass(*self.MakePolicyParameter(parameter))#为每个traceFile实例化一个policy对象
+                    self.ProcessEachPolicy(policy,traceFile)
+                    logging.debug(f'end policy:{policyName};traceFile:{traceFile};parameter:{parameter}frameNumber{frameNumber}')
         self.End()
     def ProcessEachPolicy(self,policy,traceFile):
         policy.SetUp()
@@ -41,8 +45,9 @@ class PageManager:
                 policy.ProcessNewPage(pageNumber)
         policy.End()
         output = policy.GetOutput()
-        self.outputFile.write(output)
-
+        self.WriteToOutputFile(output)
+    def WriteToOutputFile(self,msg:str):
+        self.outputFile.write(msg)
     def MakePolicyParameter(self,parameter):
         return parameter,self.commonPolicyParameters,self.pages
     def End(self):

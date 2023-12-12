@@ -17,9 +17,6 @@ class FIFO(BasePolicy):
         self.allValid = True
         pages[self.cursor].addr = pageNumber
         self.cursor=(self.cursor+1)%len(pages)
-
-    def GetOutput(self)->str:
-        return f'policy\ttotalNumber\thitNumber\thitRate\nFIFO\t{self.totalNumber}\t{self.hitNumber}\t{self.hitRate}\n'
     def SetUp(self):
         self.allValid = False
         self.cursor=0
