@@ -1,8 +1,9 @@
 from BasePolicy import BasePolicy
 import logging
+import random
 
 
-class FIFO(BasePolicy):
+class Random(BasePolicy):
     def ProcessNewPage(self, pageNumber: int):
         pages = self.pages
         self.totalNumber += 1
@@ -17,13 +18,11 @@ class FIFO(BasePolicy):
                     page.addr = pageNumber
                     return
         self.allValid = True
-        pages[self.cursor].addr = pageNumber
-        self.cursor = (self.cursor + 1) % len(pages)
+        randomIndex = random.randint(0, len(pages) - 1)
+        pages[randomIndex].addr = pageNumber
 
     def SetUp(self):
         self.allValid = False
-        self.cursor = 0
 
     def End(self):
         self.hitRate = self.hitNumber / self.totalNumber
-        # logging.debug('FIFO end')
