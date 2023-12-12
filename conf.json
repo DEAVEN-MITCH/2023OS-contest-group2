@@ -1,0 +1,27 @@
+{
+    "testPolicies": [
+        "FIFO"
+    ],
+    "policyParameters": {
+        "FIFO": [],
+        "MIN": [],
+        "LRU": [],
+        "Second chance": [],
+        "Random": [],
+        "LFU": []
+    },
+    "frameNumber": 32,
+    "commonPolicyParameters": {
+        "prepage": false,
+        "countPageUsingTime": false,
+        "AveragePageUsingTime": 0,
+        "AveragePageFaultProcessingTime": 1
+    },
+    "outputFile": "output.txt",
+    "traceFile": [
+        "mm16.txt",
+        "mm32.txt",
+        "sort1.txt",
+        "lu.txt"
+    ]
+}
