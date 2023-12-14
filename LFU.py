@@ -22,6 +22,7 @@ class LFU(BasePolicy):
         lfu_page = min(pages, key=lambda page: page.accessCount)
         lfu_page.addr = pageNumber
         lfu_page.accessCount = 1
+        
 
     def SetUp(self):
         self.allValid = False

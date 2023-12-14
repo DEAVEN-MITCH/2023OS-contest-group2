@@ -10,6 +10,7 @@ class Page:
         self.lastAccessed = 0
         self.accessCount = 0
         self.addr = 0
+        self.lfu = False
 
 
 class PageManager:
