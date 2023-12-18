@@ -11,6 +11,7 @@ class Page:
         self.accessCount = 0
         self.addr = 0
         self.lfu = False
+        self.lru = False
 
 
 class PageManager:
