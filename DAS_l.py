@@ -51,7 +51,7 @@ class DAS_l(BasePolicy):
         self.lfuCount = 0
         self.lfuSize = 0
         self.lruSize = 0
-        self.p = 0.01    #LRU比例
+        self.p = 0.01   #LRU比例
         self.freq = defaultdict(int)
 
     def End(self):

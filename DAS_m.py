@@ -18,8 +18,8 @@ class DAS_m(BasePolicy):
                 self.freq[page.addr] += 1
                 page.lastAccessed = 0
                 if self.lfuCount == self.lfuSize:
-                    min_lfu_block = min([page for page in pages if page.lfu], key=lambda page: (1.25*self.freq[page.addr]-page.lastAccessed))
-                    if self.freq[min_lfu_block.addr]*1.25-min_lfu_block.lastAccessed < self.freq[page.addr]*1.25-page.lastAccessed:
+                    min_lfu_block = min([page for page in pages if page.lfu], key=lambda page: (self.freq[page.addr]))
+                    if self.freq[min_lfu_block.addr] < self.freq[page.addr]:
                         page.lfu, min_lfu_block.lfu = True, False
                 elif self.lfuCount < self.lfuSize:
                     page.lfu = True
@@ -51,7 +51,7 @@ class DAS_m(BasePolicy):
         self.lfuCount = 0
         self.lfuSize = 0
         self.lruSize = 0
-        self.p = 0.01    #LRU比例
+        self.p = 0.5   #LRU比例
         self.freq = defaultdict(int)
 
     def End(self):
